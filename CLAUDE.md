@@ -16,9 +16,19 @@ This is a monorepo with separate frontend and backend:
 money-matters/
 ├── frontend/           # React + TypeScript + Vite
 ├── src/backend/       # .NET 10 with Clean Architecture
-├── PRODUCT_SPEC.md    # Detailed product requirements and UI spec
-├── IMPLEMENTATION_PLAN.md  # Phase-by-phase implementation plan
-└── SECURITY.md        # Critical security guidelines
+├── docs/              # All project documentation
+│   ├── README.md                        # Documentation index
+│   ├── product-spec.md                  # Product requirements
+│   ├── implementation-plan.md           # Development roadmap
+│   ├── security.md                      # Security guidelines
+│   ├── quick-start.md                   # Setup guide
+│   ├── components/                      # Component docs
+│   │   ├── forms-api-reference.md      # Form components API
+│   │   └── form-components-delivery.md # Delivery summaries
+│   └── development/                     # Development guides
+│       └── storybook-guide.md          # Storybook setup
+├── CLAUDE.md          # This file - Claude Code configuration
+└── README.md          # Project overview
 ```
 
 ## Tech Stack & Package Management
@@ -130,7 +140,7 @@ The backend uses Clean Architecture with CQRS:
 
 **Production secrets**: Store ALL production secrets in Azure Key Vault, referenced via Managed Identity.
 
-See `SECURITY.md` for comprehensive security guidelines.
+See `docs/security.md` for comprehensive security guidelines.
 
 ## Domain Model Overview
 
@@ -184,7 +194,7 @@ All endpoints return JSON. API client handles auth headers automatically.
 
 ## Design System
 
-The app uses a minimal, clean design system defined in the PRODUCT_SPEC.md:
+The app uses a minimal, clean design system defined in `docs/product-spec.md`:
 
 - **Colors**: Semantic colors (green/yellow/red for status), neutral backgrounds
 - **Components**: StatCard, InfoCard, DataTable, Badge, Chip, Charts (line/bar/donut)
@@ -211,24 +221,198 @@ All commits and PRs must use this attribution:
 
 1. **Frontend changes**: Always run `bun run lint:fix` and `bun run format` before committing
 2. **Backend changes**: Run `dotnet test` to ensure tests pass
-3. **New features**: Reference PRODUCT_SPEC.md for UI requirements and IMPLEMENTATION_PLAN.md for task organization
+3. **New features**: Reference `docs/product-spec.md` for UI requirements and `docs/implementation-plan.md` for task organization
 4. **Database changes**: Create EF Core migrations and update the migration in the commit
 5. **API changes**: Update Swagger/OpenAPI documentation
+6. **Documentation changes**: Update `docs/README.md` index when adding new documentation (see Documentation Maintenance below)
 
 ## Important Files to Reference
 
-- **PRODUCT_SPEC.md**: Complete UI specification, component library, screen layouts, API bindings
-- **IMPLEMENTATION_PLAN.md**: Phased implementation plan with all features organized
-- **SECURITY.md**: Security guidelines, secrets management, Azure Key Vault setup
+- **docs/README.md**: Documentation index with links to all docs
+- **docs/product-spec.md**: Complete UI specification, component library, screen layouts, API bindings
+- **docs/implementation-plan.md**: Phased implementation plan with all features organized
+- **docs/security.md**: Security guidelines, secrets management, Azure Key Vault setup
+- **docs/quick-start.md**: Fast setup instructions
 - **frontend/README.md**: Frontend-specific setup and commands
 - **src/backend/README.md**: Backend-specific architecture notes
+
+## Documentation Maintenance
+
+### Documentation Structure
+
+All project documentation lives in the `docs/` directory with a centralized index at `docs/README.md`.
+
+### File Naming Convention
+
+**IMPORTANT**: All documentation files MUST use lowercase names with dash separators:
+
+✅ **Correct**:
+- `product-spec.md`
+- `implementation-plan.md`
+- `form-components-delivery.md`
+- `storybook-guide.md`
+
+❌ **Incorrect**:
+- `PRODUCT_SPEC.md`
+- `ProductSpec.md`
+- `product_spec.md`
+- `ProductSpecification.md`
+
+### Documentation Categories
+
+Organize documentation into these categories:
+
+```
+docs/
+├── README.md                    # Main index (MUST be updated)
+├── *.md                        # Root-level docs (product, implementation, etc.)
+├── components/                 # Component-specific documentation
+│   ├── *-api-reference.md     # API references
+│   └── *-delivery.md          # Delivery summaries
+├── development/                # Development guides and tools
+│   └── *-guide.md             # Setup/usage guides
+└── architecture/               # Architecture documentation
+    └── *.md                    # Architecture docs
+```
+
+### Adding New Documentation
+
+When creating new documentation, **ALWAYS**:
+
+1. **Create the file** in the appropriate category folder
+2. **Use lowercase-with-dashes** naming convention
+3. **Update `docs/README.md`** to include the new document:
+   - Add to table of contents
+   - Add to appropriate topic section
+   - Add to file structure tree
+   - Add brief description
+
+4. **Link from related docs** if applicable (e.g., README.md, CLAUDE.md)
+5. **Use consistent formatting**:
+   - Markdown with proper headers
+   - Code blocks with language tags
+   - Examples where helpful
+   - Attribution footer: `🤖 Submitted by George with love ♥`
+
+### Updating `docs/README.md` Index
+
+The `docs/README.md` file is the central hub for all documentation. When adding new docs:
+
+#### Update the File Structure Tree
+
+```markdown
+## Documentation Structure
+
+```
+docs/
+├── README.md
+├── your-new-doc.md              # Add here
+├── components/
+│   └── your-component-doc.md    # Or here
+└── development/
+    └── your-guide.md            # Or here
+```
+```
+
+#### Add to Appropriate Topic Section
+
+Find the relevant section (Product & Planning, Components, Development Tools, etc.) and add a link:
+
+```markdown
+### Components
+
+- **[Your Component](components/your-component.md)** - Brief description of what it documents
+```
+
+#### Add to Quick Links (if important)
+
+For critical documents, add to the Quick Links section at the top.
+
+### Documentation Quality Standards
+
+All documentation should:
+
+- ✅ Be clear and concise
+- ✅ Include practical examples
+- ✅ Use proper Markdown formatting
+- ✅ Be kept up-to-date with code changes
+- ✅ Include code snippets with syntax highlighting
+- ✅ Have a clear table of contents for long docs
+- ✅ Use relative links for internal references
+- ✅ End with attribution footer
+
+### Example: Adding a New Component Doc
+
+```bash
+# 1. Create the documentation file
+touch docs/components/button-components.md
+
+# 2. Write the documentation with proper naming
+# File: docs/components/button-components.md
+
+# 3. Update docs/README.md:
+#    - Add to file structure tree
+#    - Add to "Components" section
+#    - Add brief description
+
+# 4. Link from main README.md if it's a major component
+
+# 5. Commit with clear message
+git add docs/components/button-components.md docs/README.md
+git commit -m "Add button components documentation
+
+Added comprehensive documentation for button components including
+variants, props, and usage examples.
+
+🤖 Submitted by George with love ♥"
+```
+
+### Documentation Review Checklist
+
+Before committing documentation changes:
+
+- [ ] File uses lowercase-with-dashes naming
+- [ ] File is in correct category folder
+- [ ] `docs/README.md` index updated
+- [ ] Links are relative and working
+- [ ] Code examples are tested
+- [ ] Proper Markdown formatting
+- [ ] Attribution footer included
+- [ ] No typos or grammar errors
+
+### Common Documentation Tasks
+
+#### Creating a New Component Delivery Doc
+
+```bash
+# Location: docs/components/
+# Name: component-name-delivery.md
+# Update: docs/README.md under "Components" section
+```
+
+#### Creating a New Development Guide
+
+```bash
+# Location: docs/development/
+# Name: tool-name-guide.md
+# Update: docs/README.md under "Development Tools" section
+```
+
+#### Updating Product Spec
+
+```bash
+# File: docs/product-spec.md
+# Also update: Version/date in document if using versions
+# Consider: If major changes, note in docs/README.md description
+```
 
 ## Current Development Phase
 
 Phase 1: Foundation & Infrastructure (In Progress)
 - ✅ React frontend foundation complete
 - ✅ Migrated to Bun for package management
+- ✅ Form components with React Hook Form + Zod validation
 - 🚧 .NET backend foundation in progress
 - 🚧 Azure infrastructure setup pending
 
-Refer to IMPLEMENTATION_PLAN.md for the complete roadmap.
+Refer to `docs/implementation-plan.md` for the complete roadmap.

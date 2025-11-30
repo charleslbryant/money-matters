@@ -18,12 +18,13 @@ Money Matters is a cash-flow intelligence dashboard designed for entrepreneurs. 
 ## Tech Stack
 
 ### Frontend
-- React 18 with TypeScript
+- React 19 with TypeScript
 - Vite for build tooling
+- Bun package manager
 - Tailwind CSS for styling
 - React Router v6 for routing
-- React Query for data fetching
-- Recharts for data visualization
+- React Hook Form + Zod for forms and validation
+- Axios for API communication
 
 ### Backend
 - .NET 10 with C#
@@ -49,25 +50,27 @@ All sensitive configuration MUST be:
 - Added to .gitignore
 - Never hardcoded in source files
 
-See [SECURITY.md](./SECURITY.md) for complete security guidelines.
+See [SECURITY.md](./docs/security.md) for complete security guidelines.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Bun 1.2+ (package manager)
 - .NET 10 SDK
 - PostgreSQL 15+
 - Azure CLI (for deployment)
 
 ### Local Development
 
+See [Quick Start Guide](./docs/quick-start.md) for detailed setup instructions.
+
 #### Backend Setup
 
 ```bash
 cd src/backend
 dotnet restore
-dotnet ef database update
+dotnet ef database update --project MoneyMatters.Api
 dotnet run --project MoneyMatters.Api
 ```
 
@@ -76,9 +79,9 @@ The API will be available at `https://localhost:7001`
 #### Frontend Setup
 
 ```bash
-cd src/frontend
-npm install
-npm run dev
+cd frontend
+bun install
+bun run dev
 ```
 
 The app will be available at `http://localhost:5173`
@@ -91,31 +94,39 @@ See `.env.example` files in both frontend and backend directories.
 
 ```
 money-matters/
-├── src/
-│   ├── backend/              # .NET 8 API
-│   │   ├── MoneyMatters.Api
-│   │   ├── MoneyMatters.Application
-│   │   ├── MoneyMatters.Core
-│   │   └── MoneyMatters.Infrastructure
-│   └── frontend/             # React app
-│       ├── src/
-│       │   ├── components/
-│       │   ├── screens/
-│       │   ├── hooks/
-│       │   ├── services/
-│       │   └── types/
-│       └── public/
-├── docs/                     # Documentation
-├── PRODUCT_SPEC.md          # Product specification
-└── IMPLEMENTATION_PLAN.md   # Implementation plan
+├── frontend/                 # React + TypeScript + Vite
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   ├── services/         # API client and utilities
+│   │   └── App.tsx
+│   └── package.json
+├── src/backend/             # .NET 10 API
+│   ├── MoneyMatters.Api
+│   ├── MoneyMatters.Application
+│   ├── MoneyMatters.Core
+│   └── MoneyMatters.Infrastructure
+├── docs/                    # All documentation
+│   ├── README.md           # Documentation index
+│   ├── product-spec.md     # Product specification
+│   ├── implementation-plan.md
+│   ├── security.md
+│   ├── components/         # Component documentation
+│   └── development/        # Development guides
+├── CLAUDE.md               # Claude Code configuration
+└── README.md              # This file
 ```
 
 ## Documentation
 
-- [Product Specification](./PRODUCT_SPEC.md)
-- [Implementation Plan](./IMPLEMENTATION_PLAN.md)
-- [API Documentation](./docs/api.md) (Coming soon)
-- [Architecture](./docs/architecture.md) (Coming soon)
+📚 **[View All Documentation](./docs/README.md)**
+
+Key documents:
+- [Product Specification](./docs/product-spec.md) - Complete product requirements
+- [Implementation Plan](./docs/implementation-plan.md) - Development roadmap
+- [Security Guidelines](./docs/security.md) - Security best practices
+- [Quick Start Guide](./docs/quick-start.md) - Fast setup instructions
+- [Storybook Guide](./docs/development/storybook-guide.md) - Component development
+- [Form Components](./docs/components/forms-api-reference.md) - Form component API
 
 ## Contributing
 
