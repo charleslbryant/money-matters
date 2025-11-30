@@ -406,12 +406,270 @@ Before committing documentation changes:
 # Consider: If major changes, note in docs/README.md description
 ```
 
+## Component Development with Storybook
+
+### Overview
+
+All UI components MUST have corresponding Storybook stories. Storybook is our primary tool for component development, documentation, and testing.
+
+### When to Create Stories
+
+Create Storybook stories for:
+- ✅ All new UI components
+- ✅ All modifications to existing components
+- ✅ Component variants and states
+- ✅ Edge cases and error states
+
+**IMPORTANT**: Never commit a new component without its story file.
+
+### Story File Naming Convention
+
+Stories must follow this pattern:
+- Component file: `ComponentName.tsx`
+- Story file: `ComponentName.stories.tsx`
+- Location: Same directory as the component
+
+Example:
+```
+src/components/forms/
+├── TextField.tsx
+└── TextField.stories.tsx
+```
+
+### Story File Structure
+
+Every story file must follow this template:
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { ComponentName } from './ComponentName';
+
+const meta = {
+  title: 'Category/ComponentName',  // e.g., 'Forms/TextField'
+  component: ComponentName,
+  parameters: {
+    layout: 'centered',  // or 'fullscreen', 'padded'
+  },
+  tags: ['autodocs'],  // Enables auto-generated documentation
+} satisfies Meta<typeof ComponentName>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+// Default variant (REQUIRED)
+export const Default: Story = {
+  args: {
+    // Component props
+  },
+};
+
+// Additional variants showing different states
+export const WithCustomProp: Story = {
+  args: {
+    // Different props
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+  },
+};
+```
+
+### Story Categories
+
+Organize stories using these categories in the `title` field:
+
+- **Forms/** - Form components (TextField, Select, etc.)
+- **Layout/** - Layout components (StatCard, InfoCard, DataTable)
+- **Feedback/** - Alerts, modals, toasts
+- **Data/** - Charts and data visualizations
+- **Navigation/** - Navigation components
+- **Interactive/** - Buttons, toggles, date pickers
+
+### Required Story Variants
+
+Every component story MUST include these variants (where applicable):
+
+1. **Default** - Basic usage with minimal props
+2. **With Content** - Realistic data/content
+3. **Disabled** - Disabled state
+4. **Loading** - Loading state (if applicable)
+5. **Error** - Error state (if applicable)
+6. **Empty** - Empty state (if applicable)
+
+### Form Component Stories
+
+Form components require special handling with React Hook Form context:
+
+```tsx
+import { FormProvider, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Wrapper component to provide form context
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ComponentWrapper = (args: any) => {
+  const schema = z.object({
+    [args.name]: z.string().min(1, 'Required'),
+  });
+
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    mode: 'onBlur',
+    defaultValues: { [args.name]: args.defaultValue || '' },
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form className="w-96">
+        <YourComponent {...args} />
+      </form>
+    </FormProvider>
+  );
+};
+
+const meta = {
+  title: 'Forms/YourComponent',
+  component: YourComponent,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+  render: (args) => <ComponentWrapper {...args} />,
+} satisfies Meta<typeof YourComponent>;
+```
+
+### Accessibility Testing
+
+All stories are automatically tested for accessibility. To check:
+
+1. Run Storybook: `bun run storybook`
+2. Select your component
+3. Open the "Accessibility" panel
+4. Fix any violations before committing
+
+### Dark Mode Support
+
+All components MUST support dark mode. Test using the theme toggle in Storybook toolbar.
+
+Ensure dark mode styles use Tailwind's `dark:` prefix:
+```tsx
+className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+```
+
+### Testing Stories
+
+Before committing:
+
+1. **Run Storybook**: `bun run storybook`
+2. **View all variants**: Verify each variant renders correctly
+3. **Test dark mode**: Toggle theme for all variants
+4. **Check accessibility**: Review a11y panel for violations
+5. **Test interactions**: Use controls to modify props
+6. **Verify responsiveness**: Resize viewport to test responsive behavior
+
+### Story Documentation
+
+Use JSDoc comments on component props - they appear in Storybook docs:
+
+```tsx
+interface ButtonProps {
+  /** The button label text */
+  label: string;
+  /** Visual style variant */
+  variant?: 'primary' | 'secondary' | 'ghost';
+  /** Whether the button is disabled */
+  disabled?: boolean;
+}
+```
+
+### Component Development Workflow
+
+When creating a new component:
+
+1. **Create component file**: `ComponentName.tsx`
+2. **Create story file**: `ComponentName.stories.tsx`
+3. **Implement component**: Build with TypeScript + Tailwind
+4. **Create stories**: Add Default and variant stories
+5. **Test in Storybook**: `bun run storybook`
+6. **Fix accessibility issues**: Check a11y panel
+7. **Test dark mode**: Verify both themes work
+8. **Run linter**: `bun run lint:fix && bun run format`
+9. **Commit together**: Component + story in same commit
+
+### Example Commit Message
+
+```
+Add Button component with variants
+
+Component Features:
+- Primary, secondary, and ghost variants
+- Small and default sizes
+- Loading and disabled states
+- Full dark mode support
+- Accessible with ARIA attributes
+
+Storybook Stories:
+- 8 variants covering all states
+- Interactive controls for all props
+- Accessibility testing passes
+- Dark mode tested
+
+🤖 Submitted by George with love ♥
+```
+
+### Running Storybook
+
+```bash
+# Development mode
+cd frontend
+bun run storybook
+# Opens at http://localhost:6006
+
+# Build static Storybook
+bun run build-storybook
+# Output: storybook-static/
+```
+
+### Storybook Addon
+
+Available addons in the toolbar:
+- **Controls** - Modify props in real-time
+- **Actions** - Log event handlers
+- **Accessibility** - WCAG compliance testing
+- **Viewport** - Test responsive designs
+- **Backgrounds** - Change background colors
+- **Theme** - Toggle light/dark mode
+
+### Common Mistakes to Avoid
+
+❌ **Don't**: Create components without stories
+❌ **Don't**: Skip accessibility testing
+❌ **Don't**: Only test in light mode
+❌ **Don't**: Use placeholder/lorem ipsum in stories
+❌ **Don't**: Forget to add JSDoc comments on props
+
+✅ **Do**: Create comprehensive stories with all variants
+✅ **Do**: Test accessibility before committing
+✅ **Do**: Test both light and dark modes
+✅ **Do**: Use realistic data in stories
+✅ **Do**: Document props with JSDoc
+
+### Resources
+
+- **Implementation Guide**: `docs/development/storybook-implementation.md`
+- **Setup Guide**: `docs/development/storybook-guide.md`
+- **Storybook Docs**: https://storybook.js.org/docs
+
 ## Current Development Phase
 
 Phase 1: Foundation & Infrastructure (In Progress)
 - ✅ React frontend foundation complete
 - ✅ Migrated to Bun for package management
 - ✅ Form components with React Hook Form + Zod validation
+- ✅ Storybook implemented for component development
 - 🚧 .NET backend foundation in progress
 - 🚧 Azure infrastructure setup pending
 
