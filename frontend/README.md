@@ -6,6 +6,7 @@ React-based frontend for the Money Matters personal finance management system.
 
 - **React 19** with TypeScript
 - **Vite** for build tooling
+- **Bun** for package management and runtime
 - **Tailwind CSS** for styling
 - **React Router v6** for routing
 - **Axios** for API communication
@@ -33,13 +34,13 @@ frontend/
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- [Bun](https://bun.sh/) 1.0+ (faster alternative to Node.js and npm)
 
 ### Installation
 
 1. Install dependencies:
 ```bash
-npm install
+bun install
 ```
 
 2. Create environment file:
@@ -57,20 +58,22 @@ VITE_APP_ENV=development
 
 Start the development server:
 ```bash
-npm run dev
+bun run dev
 ```
 
 The app will be available at `http://localhost:5173/`
 
 ### Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint errors
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
+- `bun run dev` - Start development server
+- `bun run build` - Build for production
+- `bun run preview` - Preview production build
+- `bun run lint` - Run ESLint
+- `bun run lint:fix` - Fix ESLint errors
+- `bun run format` - Format code with Prettier
+- `bun run format:check` - Check code formatting
+
+> **Note**: Bun is significantly faster than npm for installing dependencies and running scripts. If you prefer npm, it will still work, but Bun is recommended for better performance.
 
 ## Features
 
@@ -128,7 +131,7 @@ See `SECURITY.md` in the project root for detailed security guidelines.
 ## Contributing
 
 1. Follow the existing code style
-2. Run `npm run lint:fix` before committing
-3. Run `npm run format` to ensure consistent formatting
+2. Run `bun run lint:fix` before committing
+3. Run `bun run format` to ensure consistent formatting
 4. Test your changes thoroughly
 5. Update documentation as needed
