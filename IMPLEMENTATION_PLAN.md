@@ -7,10 +7,21 @@
 ### Tech Stack
 
 - **Frontend**: React (TypeScript) with world-class architecture
-- **Backend**: .NET 8 (C#) with clean architecture
+- **Backend**: .NET 10 (C#) with clean architecture
 - **Database**: PostgreSQL
 - **Hosting**: Azure (App Service, Azure Database for PostgreSQL)
 - **Repository**: Public GitHub repository
+
+### 🔒 Security First
+
+**CRITICAL: This repository is PUBLIC. Never commit secrets, credentials, or sensitive data.**
+
+All secrets MUST be stored in:
+- **Azure Key Vault** for production secrets
+- **Local environment variables** for development (never committed)
+- **GitHub Secrets** for CI/CD workflows
+
+See SECURITY.md for complete security guidelines.
 
 ---
 
@@ -27,7 +38,7 @@
 
 ### 1.2 Backend Foundation (.NET)
 
-- [ ] Create .NET 8 solution structure
+- [ ] Create .NET 10 solution structure
   - MoneyMatters.Api (Web API)
   - MoneyMatters.Core (Domain models, interfaces)
   - MoneyMatters.Infrastructure (Data access, external services)
@@ -39,6 +50,7 @@
 - [ ] Configure CORS for frontend
 - [ ] Setup logging (Serilog)
 - [ ] Configure app settings for multiple environments
+- [ ] **SECURITY**: Create appsettings.example.json (safe to commit) and add appsettings.*.json to .gitignore
 
 ### 1.3 Frontend Foundation (React)
 
@@ -50,6 +62,8 @@
 - [ ] Setup API client (Axios with interceptors)
 - [ ] Implement error boundary
 - [ ] Setup environment variables (.env)
+- [ ] **SECURITY**: Create .env.example (safe to commit) - never commit actual .env files
+- [ ] **SECURITY**: Verify .env* is in .gitignore (except .env.example)
 
 ### 1.4 Design System Implementation
 
@@ -77,6 +91,10 @@
 - [ ] Configure Application Insights
 - [ ] Setup Azure Key Vault for secrets
 - [ ] Configure connection strings and environment variables
+- [ ] **SECURITY**: Store ALL secrets in Azure Key Vault (DB passwords, API keys, connection strings)
+- [ ] **SECURITY**: Configure App Service to reference Key Vault secrets
+- [ ] **SECURITY**: Enable Managed Identity for App Service to access Key Vault
+- [ ] **SECURITY**: Never store secrets in appsettings.json or environment variable files in repo
 
 ---
 
@@ -393,6 +411,11 @@
 - [ ] Add security headers
 - [ ] Setup Azure Key Vault integration
 - [ ] Implement secret rotation
+- [ ] **SECURITY**: Audit repository for any committed secrets (use git-secrets or similar)
+- [ ] **SECURITY**: Setup pre-commit hooks to prevent secret commits
+- [ ] **SECURITY**: Review all PRs for hardcoded credentials
+- [ ] **SECURITY**: Enable GitHub secret scanning
+- [ ] **SECURITY**: Document secret management workflow in SECURITY.md
 
 ### 8.3 Performance Optimization
 
@@ -491,8 +514,8 @@
 - **Vitest** + **React Testing Library** for testing
 
 ### Backend Stack
-- **.NET 8** with C#
-- **Entity Framework Core 8** for ORM
+- **.NET 10** with C#
+- **Entity Framework Core 10** for ORM
 - **PostgreSQL 15+** for database
 - **FluentValidation** for validation
 - **MediatR** for CQRS pattern

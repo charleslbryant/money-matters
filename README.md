@@ -26,8 +26,8 @@ Money Matters is a cash-flow intelligence dashboard designed for entrepreneurs. 
 - Recharts for data visualization
 
 ### Backend
-- .NET 8 with C#
-- Entity Framework Core 8
+- .NET 10 with C#
+- Entity Framework Core 10
 - PostgreSQL 15+
 - Clean Architecture with CQRS pattern
 - RESTful API with Swagger/OpenAPI
@@ -39,12 +39,24 @@ Money Matters is a cash-flow intelligence dashboard designed for entrepreneurs. 
 - Azure Application Insights
 - Azure Key Vault
 
+## 🔒 Security Notice
+
+**This is a PUBLIC repository. Never commit secrets, API keys, passwords, or connection strings.**
+
+All sensitive configuration MUST be:
+- Stored in Azure Key Vault (production)
+- Stored in local environment variables (development)
+- Added to .gitignore
+- Never hardcoded in source files
+
+See [SECURITY.md](./SECURITY.md) for complete security guidelines.
+
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ and npm
-- .NET 8 SDK
+- .NET 10 SDK
 - PostgreSQL 15+
 - Azure CLI (for deployment)
 

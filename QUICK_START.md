@@ -133,7 +133,7 @@ gh issue develop 2 --checkout
 ### 2. Setup Development Environment
 
 **Backend Requirements:**
-- .NET 8 SDK
+- .NET 10 SDK
 - PostgreSQL 15+
 - Your preferred IDE (VS Code, Rider, Visual Studio)
 
@@ -236,10 +236,10 @@ gh pr create --title "Setup .NET 8 Backend Foundation" --body "Closes #2
 - React Hook Form + Zod (forms & validation)
 
 **Backend:**
-- .NET 8 (C#)
-- Entity Framework Core 8
+- .NET 10 (C#)
+- Entity Framework Core 10
 - PostgreSQL 15+
-- MediatR (CQR pattern)
+- MediatR (CQRS pattern)
 - FluentValidation
 - Serilog (logging)
 - xUnit (testing)

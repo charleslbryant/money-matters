@@ -1,3 +1,5 @@
+# SECURITY: Never commit secrets or credentials!
+
 # .NET
 bin/
 obj/
@@ -31,6 +33,17 @@ artifacts/
 *.userosscache
 *.sln.docstates
 
+# SECURITY: .NET secrets and configuration
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+appsettings.*.json
+!appsettings.json
+!appsettings.example.json
+secrets.json
+user-secrets.json
+*.secret
+
 # React / Node
 node_modules/
 npm-debug.log*
@@ -40,12 +53,17 @@ yarn-error.log*
 .pnp.js
 dist/
 build/
+.cache/
+.parcel-cache/
+
+# SECURITY: Environment variables (never commit!)
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.cache/
-.parcel-cache/
+.env.*.local
+!.env.example
 
 # IDEs
 .idea/
@@ -55,15 +73,22 @@ build/
 .DS_Store
 *.code-workspace
 
-# Environment variables
-.env
-*.env
-!.env.example
-
-# Azure
+# SECURITY: Azure credentials and secrets
 *.publishsettings
 *.pubxml
 *.azurePubxml
+.azure/
+
+# SECURITY: Certificates and private keys
+*.pfx
+*.p12
+*.key
+*.pem
+*.crt
+*.cer
+id_rsa*
+*.ppk
+*.keystore
 
 # Database
 *.db
