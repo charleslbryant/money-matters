@@ -1,0 +1,6 @@
+@MoneyMatters.Api_HostAddress = http://localhost:5008
+
+GET {{MoneyMatters.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -34,11 +34,12 @@ artifacts/
 *.sln.docstates
 
 # SECURITY: .NET secrets and configuration
-appsettings.Development.json
 appsettings.Staging.json
 appsettings.Production.json
-appsettings.*.json
+appsettings.Local.json
+appsettings.*.local.json
 !appsettings.json
+!appsettings.Development.json
 !appsettings.example.json
 secrets.json
 user-secrets.json
