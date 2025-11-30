@@ -1,0 +1,125 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Money Matters Component Library
+
+Welcome to the Money Matters component library! This Storybook contains all UI components used in the application.
+
+## What is Money Matters?
+
+Money Matters is a cash-flow intelligence dashboard for entrepreneurs. It monitors cash across accounts, tracks bills and income, forecasts cash flow, warns before shortfalls, and tracks savings goals.
+
+**Key distinction**: This is NOT a budgeting app—it's a financial forecasting and alerting system focused on forward-looking insights (30-90 days).
+
+## Getting Started
+
+Browse the components in the sidebar, organized by category:
+
+### 📝 Forms
+Input components with validation, including:
+- **Form** - Wrapper with React Hook Form + Zod validation
+- **TextField** - Text input with validation support
+- **NumberField** - Numeric input with currency/prefix support
+- **Select** - Dropdown selection
+- **TextArea** - Multi-line text input
+- **SearchInput** - Standalone search component
+
+### 🎨 Design Principles
+
+- **Clean and minimal**: Focus on clarity and decision support
+- **Accessible**: WCAG 2.1 AA compliant with proper ARIA attributes
+- **Responsive**: Mobile-first design (mobile → tablet → desktop)
+- **Dark mode**: Full dark mode support for all components
+- **Data-dense but readable**: Show important information efficiently
+
+### 🎯 Component Features
+
+All components include:
+- ✅ TypeScript type safety
+- ✅ React Hook Form integration
+- ✅ Zod schema validation
+- ✅ Dark mode support
+- ✅ Accessibility (ARIA attributes, keyboard navigation)
+- ✅ Error states with clear messaging
+- ✅ Helper text and tooltips
+- ✅ Responsive design
+
+## Tech Stack
+
+- **React 19** with TypeScript
+- **Vite** for build tooling
+- **Tailwind CSS** for styling
+- **React Hook Form** for form state management
+- **Zod** for schema validation
+- **Storybook** for component development and documentation
+
+## Using This Storybook
+
+### Viewing Components
+
+1. **Browse** the component categories in the left sidebar
+2. **Select** a component to view its documentation and examples
+3. **Interact** with the component using the controls panel
+4. **Toggle** between light and dark themes using the toolbar
+
+### Controls Panel
+
+Use the Controls panel to:
+- Change component props in real-time
+- Test different states and configurations
+- Explore all component variants
+- Copy code examples
+
+### Accessibility
+
+Use the Accessibility panel to:
+- Check WCAG compliance
+- View ARIA attributes
+- Test keyboard navigation
+- Identify contrast issues
+
+## Development
+
+### Adding New Components
+
+1. Create your component in `src/components/`
+2. Create a story file: `ComponentName.stories.tsx`
+3. Add variants for different states
+4. Document props with TypeScript and JSDoc
+5. Test accessibility with the a11y addon
+
+### Story Format
+
+```tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { YourComponent } from './YourComponent';
+
+const meta = {
+  title: 'Category/YourComponent',
+  component: YourComponent,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+} satisfies Meta<typeof YourComponent>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    // Component props
+  },
+};
+```
+
+## Resources
+
+- [Product Specification](https://github.com/charleslbryant/money-matters/blob/main/docs/product-spec.md)
+- [Form Components API](https://github.com/charleslbryant/money-matters/blob/main/docs/components/forms-api-reference.md)
+- [Storybook Guide](https://github.com/charleslbryant/money-matters/blob/main/docs/development/storybook-guide.md)
+
+---
+
+🤖 Submitted by George with love ♥
