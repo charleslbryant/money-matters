@@ -400,6 +400,38 @@ All commits and PRs must use this attribution:
 
 ## Development Workflow
 
+### Selecting Work from GitHub Issues
+
+**When starting new work, ALWAYS check GitHub Issues first:**
+
+```bash
+# List all open issues
+gh issue list
+
+# View a specific issue with details
+gh issue view <issue-number>
+
+# Close an issue with a comment
+gh issue close <issue-number> --comment "Implementation complete. Details: ..."
+```
+
+**Workflow for tackling issues:**
+1. Run `gh issue list` to see available work
+2. Select an issue that matches current phase/priorities
+3. Read the issue details with `gh issue view <number>`
+4. Create feature branch if needed: `git checkout -b issue-<number>-feature-name`
+5. Implement the feature with tests
+6. Commit with reference to issue: `Fixes #<number>` or `Closes #<number>` in commit message
+7. Close issue with summary comment when complete
+
+**Issue Priority:**
+- Work on issues in numerical order within each phase
+- Phase 7 (Testing) is current priority
+- Phase 8-10 issues are future work
+- Check issue labels for categorization (frontend, backend, testing, etc.)
+
+### Standard Development Workflow
+
 1. **Frontend changes**: Always run `bun run lint:fix` and `bun run format` before committing
 2. **Backend changes**: Run `dotnet test` to ensure tests pass
 3. **New features**: Reference `docs/product-spec.md` for UI requirements and `docs/implementation-plan.md` for task organization
