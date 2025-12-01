@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { userEvent, within, expect } from '@storybook/test';
 import { TextField } from './TextField';
 
 // Wrapper component to provide form context
@@ -104,5 +105,64 @@ export const Telephone: Story = {
     type: 'tel',
     placeholder: '(555) 123-4567',
     helperText: 'Enter your phone number with area code',
+  },
+};
+
+/**
+ * Story with interaction tests - demonstrates user interactions
+ * This story includes a play function that simulates user behavior
+ */
+export const WithInteractions: Story = {
+  args: {
+    name: 'email',
+    label: 'Email Address',
+    placeholder: 'you@example.com',
+    required: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the input field by label
+    const emailInput = canvas.getByLabelText(/email address/i);
+
+    // Type valid email
+    await userEvent.type(emailInput, 'test@example.com');
+
+    // Verify the value was entered
+    await expect(emailInput).toHaveValue('test@example.com');
+
+    // Clear the field
+    await userEvent.clear(emailInput);
+
+    // Type invalid email and blur to trigger validation
+    await userEvent.type(emailInput, 'invalid-email');
+    await userEvent.tab();
+
+    // The validation error should appear (async, so we wait)
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  },
+};
+
+/**
+ * Story testing disabled state - user cannot interact
+ */
+export const DisabledWithInteractions: Story = {
+  args: {
+    name: 'email',
+    label: 'Email Address',
+    disabled: true,
+    defaultValue: 'readonly@example.com',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the input
+    const emailInput = canvas.getByLabelText(/email address/i);
+
+    // Verify it's disabled
+    await expect(emailInput).toBeDisabled();
+
+    // Verify the default value is set
+    await expect(emailInput).toHaveValue('readonly@example.com');
   },
 };

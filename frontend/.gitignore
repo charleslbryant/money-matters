@@ -33,3 +33,12 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Test artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+trace.zip
+coverage/
+screenshots/
+videos/
