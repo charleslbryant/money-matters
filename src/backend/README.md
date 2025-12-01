@@ -43,25 +43,29 @@ docker run --name moneymatters-postgres \
 
 ### 2. Configuration
 
-The connection string is configured in `appsettings.Development.json`. Update it if needed:
+**IMPORTANT: Use User Secrets for local development**
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=moneymatters_dev;Username=postgres;Password=postgres"
-  }
-}
+The connection string is **NOT** stored in `appsettings.json` files. Use .NET user secrets:
+
+```bash
+# Initialize user secrets (already done)
+dotnet user-secrets init --project MoneyMatters.Api
+
+# Set connection string
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=moneymatters_dev;Username=postgres;Password=postgres" --project MoneyMatters.Api
 ```
 
-**Note:** For production, use Azure Key Vault or environment variables. Never commit real credentials.
+**Note:** For production, use Azure Key Vault. Never commit real credentials.
 
 ### 3. Run Migrations
 
 ```bash
-# From the src/backend directory
-dotnet ef migrations add InitialCreate --project MoneyMatters.Infrastructure --startup-project MoneyMatters.Api
-dotnet ef database update --project MoneyMatters.Infrastructure --startup-project MoneyMatters.Api
+# From the project root directory
+export PATH="$PATH:$HOME/.dotnet/tools"  # Add dotnet tools to PATH
+dotnet ef database update --project src/backend/MoneyMatters.Infrastructure --startup-project src/backend/MoneyMatters.Api
 ```
+
+The initial migration has already been created (`InitialCreate`).
 
 ### 4. Run the API
 
@@ -83,19 +87,22 @@ The API will be available at:
 
 ### OpenAPI / Swagger
 
-In development mode, OpenAPI documentation is available at:
-- OpenAPI spec: `https://localhost:7001/openapi/v1.json`
-- Swagger UI will be configured in a future update
+In development mode, Swagger UI is available at:
+- Swagger UI: `https://localhost:7001/swagger`
+- OpenAPI spec: `https://localhost:7001/swagger/v1/swagger.json`
 
 ## Key Features
 
-✅ Clean Architecture with CQRS pattern ready
+✅ Clean Architecture with CQRS pattern (MediatR ready)
+✅ FluentValidation for request validation
 ✅ Entity Framework Core 10 with PostgreSQL
-✅ Serilog for structured logging
+✅ Serilog for structured logging (console + file)
 ✅ Health checks with database connectivity
 ✅ CORS configured for frontend
-✅ OpenAPI documentation
-✅ Secure configuration management
+✅ Swagger/OpenAPI documentation with XML comments
+✅ Global exception handling middleware
+✅ Secure configuration management (User Secrets)
+✅ Comprehensive test infrastructure (xUnit, FluentAssertions, Moq)
 
 ## Development
 
@@ -108,10 +115,12 @@ dotnet build MoneyMatters.sln
 ### Running Tests
 
 ```bash
-dotnet test
+dotnet test MoneyMatters.sln
 ```
 
-(Tests will be added in Phase 7)
+Current test coverage:
+- ✅ Health check API endpoint tests (2 passing)
+- Test infrastructure ready for Phase 7
 
 ### Database Migrations
 
@@ -147,24 +156,39 @@ Log levels can be configured in `appsettings.json` and `appsettings.Development.
 ## Dependencies
 
 ### Core Packages
-- `Microsoft.AspNetCore.OpenApi` - OpenAPI support
+- `Microsoft.AspNetCore.OpenApi` (10.0.0) - OpenAPI support
+- `Swashbuckle.AspNetCore` (10.0.1) - Swagger UI
 - `Microsoft.EntityFrameworkCore` (10.0.0) - ORM
 - `Npgsql.EntityFrameworkCore.PostgreSQL` (10.0.0) - PostgreSQL provider
 - `Serilog.AspNetCore` (10.0.0) - Logging
 - `AspNetCore.HealthChecks.NpgSql` (9.0.0) - Database health checks
+- `MediatR` (13.1.0) - CQRS pattern implementation
+- `FluentValidation` (12.1.0) - Request validation
+
+### Test Packages
+- `xUnit` (2.9.3) - Testing framework
+- `FluentAssertions` (7.0.0) - Fluent assertion library
+- `Moq` (4.20.72) - Mocking framework
+- `Microsoft.AspNetCore.Mvc.Testing` (10.0.0) - Integration testing
 
 ## Project Status
 
-Current implementation: **Phase 1 - Foundation** ✅
+Current implementation: **Phase 1 - Foundation** ✅ COMPLETE
 
 - [x] Solution structure with clean architecture
 - [x] Entity Framework Core with PostgreSQL
+- [x] MediatR for CQRS pattern
+- [x] FluentValidation for request validation
 - [x] Dependency injection configured
-- [x] Swagger/OpenAPI setup
+- [x] Swagger/OpenAPI with XML documentation
 - [x] Health check endpoints
 - [x] CORS configuration
-- [x] Serilog logging
-- [x] Secure configuration management
+- [x] Serilog logging (console + file)
+- [x] Global exception handling middleware
+- [x] User Secrets for local development
+- [x] Initial EF Core migration created
+- [x] Test infrastructure with xUnit, FluentAssertions, Moq
+- [x] Health check endpoint tests
 
 Next up: **Phase 2 - Database Schema & Domain Models**
 

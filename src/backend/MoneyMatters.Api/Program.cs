@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MoneyMatters.Api.Middleware;
 using MoneyMatters.Infrastructure;
 using Serilog;
 
@@ -17,7 +18,25 @@ builder.Host.UseSerilog();
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+
+// Configure Swagger/OpenAPI
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new()
+    {
+        Title = "Money Matters API",
+        Version = "v1",
+        Description = "Cash-flow intelligence dashboard API for entrepreneurs"
+    });
+
+    // Enable XML documentation comments
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
+});
 
 // Add Infrastructure services (Database, Repositories, etc.)
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -43,10 +62,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Money Matters API v1");
+        options.RoutePrefix = "swagger";
+        options.DocumentTitle = "Money Matters API Documentation";
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseGlobalExceptionHandler();
 
 app.UseSerilogRequestLogging();
 
