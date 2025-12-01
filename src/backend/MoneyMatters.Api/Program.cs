@@ -59,6 +59,34 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Run database migrations and seed data in development
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<MoneyMatters.Infrastructure.Data.ApplicationDbContext>();
+
+            // Run migrations
+            Log.Information("Running database migrations...");
+            await context.Database.MigrateAsync();
+
+            // Seed data
+            Log.Information("Seeding database...");
+            await MoneyMatters.Infrastructure.Data.SeedData.SeedAsync(context);
+
+            Log.Information("Database initialization completed");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while migrating or seeding the database");
+            throw;
+        }
+    }
+}
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {

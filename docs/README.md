@@ -17,6 +17,7 @@ docs/
 ├── README.md                           # This file
 ├── product-spec.md                     # Product requirements and design
 ├── implementation-plan.md              # Development roadmap
+├── database-schema.md                  # Database schema design
 ├── security.md                         # Security guidelines
 ├── quick-start.md                      # Quick setup guide
 │
@@ -38,6 +39,8 @@ docs/
 - **[Product Specification](product-spec.md)** - Detailed product requirements, UI components, screen layouts, and API bindings. Essential reading for understanding what Money Matters does and how it should work.
 
 - **[Implementation Plan](implementation-plan.md)** - Phase-by-phase implementation plan with all features organized into logical development phases. Track progress and understand the development roadmap.
+
+- **[Database Schema](database-schema.md)** - Complete database schema design with all entities, relationships, indexes, and constraints. Essential reference for backend development.
 
 ### Getting Started
 
