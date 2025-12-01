@@ -95,6 +95,187 @@ dotnet test
 dotnet build
 ```
 
+### Frontend Testing
+
+```bash
+cd frontend
+
+# Run all tests (E2E + Storybook)
+bun run test
+
+# E2E tests with Playwright
+bun run test:e2e           # Headless mode
+bun run test:e2e:ui        # Interactive UI mode
+bun run test:e2e:headed    # See browser
+bun run test:e2e:debug     # Debug mode
+
+# Storybook interaction tests
+bun run test:storybook     # Run Storybook tests
+bun run test:storybook:ci  # CI-friendly version
+```
+
+### Backend Testing
+
+```bash
+cd src/backend
+
+# Run all tests
+dotnet test
+
+# Run tests with coverage
+dotnet test /p:CollectCoverage=true
+
+# Run specific test project
+dotnet test MoneyMatters.Core.Tests
+
+# Run tests with detailed output
+dotnet test --verbosity detailed
+```
+
+## Testing Requirements
+
+**CRITICAL: All code must include comprehensive tests. Testing is NOT optional.**
+
+### Frontend Testing (Playwright + Storybook)
+
+When building frontend features, you MUST:
+
+#### 1. **Component Tests (Storybook)**
+- ✅ **Every component needs a `.stories.tsx` file** with:
+  - Default story
+  - Variant stories (disabled, loading, error, etc.)
+  - **Interaction tests using `play` functions** for interactive components
+
+```typescript
+// Example: Button.stories.tsx with interactions
+export const Interactive: Story = {
+  args: { label: 'Click Me' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+    await userEvent.click(button);
+    await expect(button).toHaveAttribute('aria-pressed', 'true');
+  },
+};
+```
+
+#### 2. **E2E Tests (Playwright)**
+- ✅ **Every user workflow needs E2E tests** in `e2e/`:
+  - User authentication (login, signup, logout)
+  - CRUD operations (create, read, update, delete)
+  - Form submissions with validation
+  - Navigation and routing
+  - Error states and edge cases
+
+```typescript
+// Example: e2e/bills.spec.ts
+test('user can create a bill', async ({ page }) => {
+  await page.goto('/bills');
+  await page.click('[data-testid="add-bill"]');
+  await page.fill('[name="name"]', 'Electric Bill');
+  await page.fill('[name="amount"]', '150.00');
+  await page.click('button[type="submit"]');
+  await expect(page.locator('text=Electric Bill')).toBeVisible();
+});
+```
+
+#### 3. **When to Write Tests**
+- **Before committing**: All new components and features
+- **With features**: Tests are part of the feature, not an afterthought
+- **For bugs**: Add regression test before fixing
+
+#### 4. **Test Coverage Goals**
+- Interactive components: 100% (all with `play` functions)
+- User workflows: 100% of critical paths
+- Edge cases and error handling
+
+**See `frontend/TESTING.md` for comprehensive testing guide.**
+
+### Backend Testing (xUnit)
+
+When building backend features, you MUST:
+
+#### 1. **Unit Tests**
+- ✅ **Every domain entity** needs tests in `MoneyMatters.Core.Tests/Entities/`
+- ✅ **Every command/query handler** needs tests in `MoneyMatters.Application.Tests/`
+- ✅ **Every service** (forecast engine, alert engine) needs comprehensive tests
+
+```csharp
+// Example: AccountTests.cs
+[Fact]
+public void AddTransaction_WithPositiveAmount_IncreasesBalance()
+{
+    // Arrange
+    var account = new Account("Checking", 1000m);
+    var transaction = new Transaction(100m, "Deposit");
+
+    // Act
+    account.AddTransaction(transaction);
+
+    // Assert
+    account.Balance.Should().Be(1100m);
+}
+```
+
+#### 2. **Integration Tests**
+- ✅ **Every API endpoint** needs integration tests in `MoneyMatters.Api.Tests/`
+- ✅ **Every repository** needs tests with in-memory database
+
+```csharp
+// Example: AccountsControllerTests.cs
+[Fact]
+public async Task GetAccounts_ReturnsOkWithAccountList()
+{
+    // Act
+    var response = await _client.GetAsync("/api/accounts");
+
+    // Assert
+    response.StatusCode.Should().Be(HttpStatusCode.OK);
+    var accounts = await response.Content.ReadFromJsonAsync<List<AccountDto>>();
+    accounts.Should().NotBeNull();
+}
+```
+
+#### 3. **When to Write Tests**
+- **Before implementing**: TDD approach preferred
+- **With implementation**: Tests are part of the feature
+- **For critical logic**: Forecast engine, alert engine need 90%+ coverage
+
+#### 4. **Test Coverage Goals**
+- Core domain: 90%+ (critical business logic)
+- Application services: 85%+ (CQRS handlers, engines)
+- Infrastructure: 70%+ (repositories, data access)
+- API endpoints: 75%+
+
+**See `src/backend/TESTING.md` for comprehensive testing guide.**
+
+### Test-Driven Development Workflow
+
+Follow this workflow for ALL new features:
+
+1. **Frontend Component**:
+   - Create component file: `Component.tsx`
+   - Create story file: `Component.stories.tsx` with interactions
+   - Create E2E test if it's a page/workflow
+   - Implement component
+   - Verify tests pass: `bun run test`
+
+2. **Backend Feature**:
+   - Create test file first: `FeatureTests.cs`
+   - Write failing test
+   - Implement feature to make test pass
+   - Add more tests for edge cases
+   - Verify coverage: `dotnet test /p:CollectCoverage=true`
+
+3. **Before Committing**:
+   - ✅ Run frontend tests: `bun run test`
+   - ✅ Run backend tests: `dotnet test`
+   - ✅ Run linters: `bun run lint:fix` and `bun run format`
+   - ✅ Verify all tests pass
+   - ✅ Check coverage meets goals
+
+**Never commit code without tests. Tests are not optional.**
+
 ## Architecture Notes
 
 ### Frontend Architecture
