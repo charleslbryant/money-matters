@@ -12,24 +12,33 @@ Welcome to the Money Matters documentation. This directory contains all project 
 
 ## Documentation Structure
 
+This is the project-wide documentation directory. Frontend-specific and backend-specific documentation can be found in their respective directories.
+
 ```
-docs/
-├── README.md                           # This file
+docs/                                   # Project-wide documentation (you are here)
+├── README.md                           # This file - Documentation index
 ├── product-spec.md                     # Product requirements and design
 ├── implementation-plan.md              # Development roadmap
 ├── database-schema.md                  # Database schema design
 ├── security.md                         # Security guidelines
 ├── quick-start.md                      # Quick setup guide
 │
-├── components/                         # Component documentation
+├── components/                         # Shared component documentation
 │   ├── forms-api-reference.md         # Form components API reference
 │   └── form-components-delivery.md    # Form components delivery summary
 │
-├── development/                        # Development guides
-│   └── storybook-guide.md             # Storybook setup and usage
-│
-└── architecture/                       # Architecture documentation
-    └── (future architecture docs)
+└── development/                        # Development guides and tools
+    ├── storybook-guide.md             # Storybook setup and usage
+    └── storybook-implementation.md    # Storybook implementation details
+
+frontend/docs/                          # Frontend-specific documentation
+├── architecture/                       # Frontend architecture docs
+├── components/                         # Component-specific docs
+└── development/                        # Frontend development guides
+
+backend/                                # Backend-specific documentation
+├── README.md                           # Backend architecture and setup
+└── TESTING.md                          # Backend testing guide
 ```
 
 ## Documentation by Topic
@@ -89,14 +98,29 @@ Money Matters is a cash-flow intelligence dashboard for entrepreneurs. It monito
 
 ### Repository Structure
 
-This is a monorepo:
+This is a monorepo with separate frontend and backend:
 ```
 money-matters/
-├── frontend/              # React + TypeScript + Vite
-├── src/backend/          # .NET 10 with Clean Architecture
-├── docs/                 # All documentation (you are here)
-├── CLAUDE.md             # Claude Code configuration
-└── README.md             # Project overview
+├── frontend/                      # React + TypeScript + Vite
+│   ├── src/                      # Application source code
+│   ├── e2e/                      # Playwright E2E tests
+│   ├── docs/                     # Frontend-specific docs
+│   ├── README.md                 # Frontend setup guide
+│   └── TESTING.md                # Frontend testing guide
+├── backend/                       # .NET 10 with Clean Architecture
+│   ├── MoneyMatters.Api           # Web API layer
+│   ├── MoneyMatters.Api.Tests     # API tests
+│   ├── MoneyMatters.Application   # Business logic
+│   ├── MoneyMatters.Application.Tests
+│   ├── MoneyMatters.Core          # Domain models
+│   ├── MoneyMatters.Core.Tests
+│   ├── MoneyMatters.Infrastructure # Data access
+│   ├── MoneyMatters.Infrastructure.Tests
+│   ├── README.md                  # Backend architecture guide
+│   └── TESTING.md                 # Backend testing guide
+├── docs/                          # Project-wide documentation (you are here)
+├── CLAUDE.md                      # Claude Code configuration
+└── README.md                      # Project overview
 ```
 
 ## Development Phases
@@ -134,7 +158,7 @@ bun run format
 ### Backend
 
 ```bash
-cd src/backend
+cd backend
 
 # Restore dependencies
 dotnet restore

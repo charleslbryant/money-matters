@@ -17,17 +17,40 @@ React-based frontend for the Money Matters personal finance management system.
 ```
 frontend/
 ├── src/
-│   ├── components/      # Reusable React components
+│   ├── components/         # Reusable React components
+│   │   ├── forms/         # Form components (React Hook Form + Zod)
+│   │   │   ├── Form.tsx
+│   │   │   ├── TextField.tsx
+│   │   │   ├── NumberField.tsx
+│   │   │   ├── Select.tsx
+│   │   │   ├── TextArea.tsx
+│   │   │   └── SearchInput.tsx
 │   │   └── ErrorBoundary.tsx
-│   ├── hooks/          # Custom React hooks
-│   ├── services/       # API clients and external services
-│   │   └── api.ts
-│   ├── types/          # TypeScript type definitions
-│   ├── utils/          # Utility functions
-│   ├── App.tsx         # Main application component
-│   └── main.tsx        # Application entry point
-├── public/             # Static assets
-└── .env.example        # Environment variables template
+│   ├── hooks/             # Custom React hooks
+│   ├── services/          # API clients and external services
+│   │   └── api.ts         # Configured Axios instance
+│   ├── types/             # TypeScript type definitions
+│   ├── utils/             # Utility functions
+│   ├── stories/           # Storybook stories
+│   │   ├── Introduction.mdx
+│   │   ├── Button.tsx & Button.stories.tsx
+│   │   └── Header.tsx & Header.stories.tsx
+│   ├── App.tsx            # Main application component
+│   └── main.tsx           # Application entry point
+├── e2e/                   # Playwright E2E tests
+│   ├── example.spec.ts
+│   └── README.md
+├── docs/                  # Frontend-specific documentation
+│   ├── architecture/      # Architecture documentation
+│   ├── components/        # Component-specific docs
+│   └── development/       # Development guides
+├── public/                # Static assets
+├── .storybook/            # Storybook configuration
+├── playwright.config.ts   # Playwright test configuration
+├── package.json
+├── README.md             # This file
+├── TESTING.md            # Testing guide
+└── .env.example          # Environment variables template
 ```
 
 ## Getting Started
@@ -65,13 +88,29 @@ The app will be available at `http://localhost:5173/`
 
 ### Available Scripts
 
+#### Development
 - `bun run dev` - Start development server
 - `bun run build` - Build for production
 - `bun run preview` - Preview production build
+
+#### Code Quality
 - `bun run lint` - Run ESLint
 - `bun run lint:fix` - Fix ESLint errors
 - `bun run format` - Format code with Prettier
 - `bun run format:check` - Check code formatting
+
+#### Testing
+- `bun run test` - Run all tests (E2E + Storybook)
+- `bun run test:e2e` - Run Playwright E2E tests (headless)
+- `bun run test:e2e:ui` - Run E2E tests in interactive UI mode
+- `bun run test:e2e:headed` - Run E2E tests in headed mode
+- `bun run test:e2e:debug` - Run E2E tests in debug mode
+- `bun run test:storybook` - Run Storybook interaction tests
+- `bun run test:storybook:ci` - Run Storybook tests (CI-friendly)
+
+#### Storybook
+- `bun run storybook` - Start Storybook on port 6006
+- `bun run build-storybook` - Build static Storybook
 
 > **Note**: Bun is significantly faster than npm for installing dependencies and running scripts. If you prefer npm, it will still work, but Bun is recommended for better performance.
 

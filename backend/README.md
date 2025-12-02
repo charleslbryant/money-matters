@@ -7,10 +7,43 @@
 The solution follows clean architecture principles with clear separation of concerns:
 
 ```
-MoneyMatters.Api/          # Web API layer (Controllers, Middleware, Configuration)
-MoneyMatters.Application/  # Business logic, CQRS handlers, DTOs
-MoneyMatters.Core/         # Domain entities, interfaces, enums
-MoneyMatters.Infrastructure/ # Data access, external services, repositories
+backend/
+├── MoneyMatters.Api/                   # Web API layer
+│   ├── Controllers/                    # API controllers
+│   ├── Middleware/                     # Custom middleware
+│   ├── Program.cs                      # Application entry point
+│   └── appsettings.json                # Configuration
+│
+├── MoneyMatters.Api.Tests/             # API integration tests
+│   ├── Controllers/                    # Controller tests
+│   └── Helpers/                        # Test helpers
+│
+├── MoneyMatters.Application/           # Business logic layer
+│   └── (CQRS handlers, DTOs, services)
+│
+├── MoneyMatters.Application.Tests/     # Application layer tests
+│   └── (Handler tests, service tests)
+│
+├── MoneyMatters.Core/                  # Domain layer
+│   ├── Entities/                       # Domain entities
+│   ├── Enums/                          # Domain enumerations
+│   └── (Interfaces, value objects)
+│
+├── MoneyMatters.Core.Tests/            # Domain/core tests
+│   └── (Entity tests, business logic tests)
+│
+├── MoneyMatters.Infrastructure/        # Infrastructure layer
+│   ├── Data/                           # EF Core DbContext
+│   ├── Migrations/                     # EF Core migrations
+│   └── DependencyInjection.cs          # DI configuration
+│
+├── MoneyMatters.Infrastructure.Tests/  # Infrastructure tests
+│   ├── Data/                           # Repository tests
+│   └── Helpers/                        # Test helpers
+│
+├── MoneyMatters.sln                    # Solution file
+├── README.md                           # This file
+└── TESTING.md                          # Testing guide
 ```
 
 ## Prerequisites
@@ -60,9 +93,9 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Da
 ### 3. Run Migrations
 
 ```bash
-# From the project root directory
+# From the backend directory
 export PATH="$PATH:$HOME/.dotnet/tools"  # Add dotnet tools to PATH
-dotnet ef database update --project src/backend/MoneyMatters.Infrastructure --startup-project src/backend/MoneyMatters.Api
+dotnet ef database update --project MoneyMatters.Infrastructure --startup-project MoneyMatters.Api
 ```
 
 The initial migration has already been created (`InitialCreate`).
@@ -115,12 +148,29 @@ dotnet build MoneyMatters.sln
 ### Running Tests
 
 ```bash
+# Run all tests
 dotnet test MoneyMatters.sln
+
+# Run tests with coverage
+dotnet test /p:CollectCoverage=true
+
+# Run specific test project
+dotnet test MoneyMatters.Api.Tests
+dotnet test MoneyMatters.Application.Tests
+dotnet test MoneyMatters.Core.Tests
+dotnet test MoneyMatters.Infrastructure.Tests
+
+# Run tests with detailed output
+dotnet test --verbosity detailed
+
+# Run with coverage report (using script)
+./run-tests-with-coverage.sh
 ```
 
 Current test coverage:
 - ✅ Health check API endpoint tests (2 passing)
-- Test infrastructure ready for Phase 7
+- Test infrastructure ready for all layers
+- See [TESTING.md](./TESTING.md) for comprehensive testing guide
 
 ### Database Migrations
 

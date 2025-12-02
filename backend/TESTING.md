@@ -7,7 +7,7 @@ This document provides comprehensive guidance on testing the Money Matters backe
 The solution includes four test projects following the clean architecture layers:
 
 ```
-src/backend/
+backend/
 ├── MoneyMatters.Core.Tests/          # Domain entity and value object tests
 ├── MoneyMatters.Application.Tests/   # Business logic, CQRS handlers, services
 ├── MoneyMatters.Infrastructure.Tests/ # Data access, repository tests
@@ -31,7 +31,7 @@ Additional packages by project:
 ### Run All Tests
 
 ```bash
-# From src/backend directory
+# From backend directory
 dotnet test MoneyMatters.sln
 
 # With detailed output

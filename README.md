@@ -68,7 +68,7 @@ See [Quick Start Guide](./docs/quick-start.md) for detailed setup instructions.
 #### Backend Setup
 
 ```bash
-cd src/backend
+cd backend
 dotnet restore
 dotnet ef database update --project MoneyMatters.Api
 dotnet run --project MoneyMatters.Api
@@ -94,26 +94,51 @@ See `.env.example` files in both frontend and backend directories.
 
 ```
 money-matters/
-├── frontend/                 # React + TypeScript + Vite
-│   ├── src/
-│   │   ├── components/       # Reusable UI components
-│   │   ├── services/         # API client and utilities
+├── frontend/                      # React + TypeScript + Vite
+│   ├── src/                      # Application source code
+│   │   ├── components/           # Reusable UI components
+│   │   │   └── forms/           # Form components (React Hook Form + Zod)
+│   │   ├── services/             # API client and utilities
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── types/                # TypeScript type definitions
+│   │   ├── utils/                # Utility functions
+│   │   ├── stories/              # Storybook stories
 │   │   └── App.tsx
+│   ├── e2e/                      # Playwright E2E tests
+│   ├── docs/                     # Frontend-specific documentation
+│   │   ├── architecture/         # Architecture docs
+│   │   ├── components/           # Component-specific docs
+│   │   └── development/          # Development guides
+│   ├── README.md                 # Frontend setup guide
+│   ├── TESTING.md                # Frontend testing guide
 │   └── package.json
-├── src/backend/             # .NET 10 API
-│   ├── MoneyMatters.Api
-│   ├── MoneyMatters.Application
-│   ├── MoneyMatters.Core
-│   └── MoneyMatters.Infrastructure
-├── docs/                    # All documentation
-│   ├── README.md           # Documentation index
-│   ├── product-spec.md     # Product specification
-│   ├── implementation-plan.md
-│   ├── security.md
-│   ├── components/         # Component documentation
-│   └── development/        # Development guides
-├── CLAUDE.md               # Claude Code configuration
-└── README.md              # This file
+├── backend/                       # .NET 10 API with Clean Architecture
+│   ├── MoneyMatters.Api           # Web API layer (Controllers, Middleware)
+│   ├── MoneyMatters.Api.Tests     # API integration tests
+│   ├── MoneyMatters.Application   # Business logic, CQRS handlers
+│   ├── MoneyMatters.Application.Tests  # Application layer tests
+│   ├── MoneyMatters.Core          # Domain models, entities, interfaces
+│   ├── MoneyMatters.Core.Tests    # Domain/core tests
+│   ├── MoneyMatters.Infrastructure # Data access, EF Core, repositories
+│   ├── MoneyMatters.Infrastructure.Tests # Infrastructure tests
+│   ├── MoneyMatters.sln           # Solution file
+│   ├── README.md                  # Backend architecture guide
+│   └── TESTING.md                 # Backend testing guide
+├── docs/                          # Project-wide documentation
+│   ├── README.md                  # Documentation index
+│   ├── product-spec.md            # Product specification
+│   ├── implementation-plan.md     # Development roadmap
+│   ├── database-schema.md         # Database design
+│   ├── security.md                # Security guidelines
+│   ├── quick-start.md             # Quick setup guide
+│   ├── components/                # Shared component documentation
+│   │   ├── forms-api-reference.md
+│   │   └── form-components-delivery.md
+│   └── development/               # Development guides
+│       ├── storybook-guide.md
+│       └── storybook-implementation.md
+├── CLAUDE.md                      # Claude Code configuration
+└── README.md                      # This file - Project overview
 ```
 
 ## Documentation

@@ -15,18 +15,38 @@ This is a monorepo with separate frontend and backend:
 ```
 money-matters/
 ├── frontend/           # React + TypeScript + Vite
-├── src/backend/       # .NET 10 with Clean Architecture
-├── docs/              # All project documentation
+│   ├── src/           # Application source code
+│   ├── e2e/           # Playwright E2E tests
+│   ├── docs/          # Frontend-specific documentation
+│   │   ├── architecture/  # Architecture documentation
+│   │   ├── components/    # Component-specific docs
+│   │   └── development/   # Development guides
+│   ├── README.md      # Frontend setup and commands
+│   └── TESTING.md     # Frontend testing guide
+├── backend/           # .NET 10 with Clean Architecture
+│   ├── MoneyMatters.Api              # Web API layer
+│   ├── MoneyMatters.Api.Tests        # API integration tests
+│   ├── MoneyMatters.Application      # Business logic, CQRS
+│   ├── MoneyMatters.Application.Tests # Application layer tests
+│   ├── MoneyMatters.Core             # Domain models, interfaces
+│   ├── MoneyMatters.Core.Tests       # Domain/core tests
+│   ├── MoneyMatters.Infrastructure   # Data access, external services
+│   ├── MoneyMatters.Infrastructure.Tests # Infrastructure tests
+│   ├── README.md      # Backend setup and architecture
+│   └── TESTING.md     # Backend testing guide
+├── docs/              # Project-wide documentation
 │   ├── README.md                        # Documentation index
 │   ├── product-spec.md                  # Product requirements
 │   ├── implementation-plan.md           # Development roadmap
+│   ├── database-schema.md               # Database design
 │   ├── security.md                      # Security guidelines
 │   ├── quick-start.md                   # Setup guide
-│   ├── components/                      # Component docs
+│   ├── components/                      # Shared component docs
 │   │   ├── forms-api-reference.md      # Form components API
 │   │   └── form-components-delivery.md # Delivery summaries
 │   └── development/                     # Development guides
-│       └── storybook-guide.md          # Storybook setup
+│       ├── storybook-guide.md          # Storybook setup
+│       └── storybook-implementation.md # Storybook implementation
 ├── CLAUDE.md          # This file - Claude Code configuration
 └── README.md          # Project overview
 ```
@@ -41,15 +61,19 @@ money-matters/
 - **Routing**: React Router v6
 - **API Client**: Axios with interceptors (see `src/services/api.ts`)
 
-### Backend (src/backend/)
+### Backend (backend/)
 - **.NET 10** with C#
 - **Architecture**: Clean Architecture with CQRS pattern
 - **Database**: PostgreSQL with Entity Framework Core 10
 - **Structure**:
-  - `MoneyMatters.Api` - Web API layer
-  - `MoneyMatters.Application` - Business logic, CQRS
-  - `MoneyMatters.Core` - Domain models, interfaces
-  - `MoneyMatters.Infrastructure` - Data access, external services
+  - `MoneyMatters.Api` - Web API layer (Controllers, Middleware)
+  - `MoneyMatters.Api.Tests` - API integration tests
+  - `MoneyMatters.Application` - Business logic, CQRS handlers
+  - `MoneyMatters.Application.Tests` - Application layer tests
+  - `MoneyMatters.Core` - Domain models, entities, enums, interfaces
+  - `MoneyMatters.Core.Tests` - Domain/core layer tests
+  - `MoneyMatters.Infrastructure` - Data access, EF Core, repositories
+  - `MoneyMatters.Infrastructure.Tests` - Infrastructure layer tests
 
 ## Common Development Commands
 
@@ -77,7 +101,7 @@ bun run format:check  # Check formatting
 ### Backend Development
 
 ```bash
-cd src/backend
+cd backend
 
 # Restore dependencies
 dotnet restore
@@ -117,7 +141,7 @@ bun run test:storybook:ci  # CI-friendly version
 ### Backend Testing
 
 ```bash
-cd src/backend
+cd backend
 
 # Run all tests
 dotnet test
@@ -447,7 +471,7 @@ gh issue close <issue-number> --comment "Implementation complete. Details: ..."
 - **docs/security.md**: Security guidelines, secrets management, Azure Key Vault setup
 - **docs/quick-start.md**: Fast setup instructions
 - **frontend/README.md**: Frontend-specific setup and commands
-- **src/backend/README.md**: Backend-specific architecture notes
+- **backend/README.md**: Backend-specific architecture notes
 
 ## Documentation Maintenance
 
