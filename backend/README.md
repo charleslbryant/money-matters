@@ -56,22 +56,36 @@ backend/
 
 ### 1. Database Setup
 
-#### Option A: Local PostgreSQL Installation
+#### Recommended: Docker Compose (Recommended)
 
-Create a new database:
+From the project root:
+
+```bash
+# Create environment file
+cp .env.example .env
+
+# Start PostgreSQL container
+./backend/scripts/db-start.sh
+```
+
+This starts a PostgreSQL 15 container with persistent storage using Docker Compose.
+
+**Database Management Scripts:**
+
+- **Start**: `./backend/scripts/db-start.sh`
+- **Stop**: `./backend/scripts/db-stop.sh`
+- **Reset** (destroys all data): `./backend/scripts/db-reset.sh`
+- **Logs**: `./backend/scripts/db-logs.sh`
+- **Verify Setup**: `./backend/scripts/verify-db-setup.sh` (runs 26 tests to verify database setup)
+
+See [backend/scripts/README.md](scripts/README.md) for detailed documentation.
+
+#### Alternative: Local PostgreSQL Installation
+
+If you prefer a local installation instead of Docker:
 
 ```sql
 CREATE DATABASE moneymatters_dev;
-```
-
-#### Option B: Docker PostgreSQL
-
-```bash
-docker run --name moneymatters-postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=moneymatters_dev \
-  -p 5432:5432 \
-  -d postgres:15
 ```
 
 ### 2. Configuration
@@ -98,7 +112,7 @@ export PATH="$PATH:$HOME/.dotnet/tools"  # Add dotnet tools to PATH
 dotnet ef database update --project MoneyMatters.Infrastructure --startup-project MoneyMatters.Api
 ```
 
-The initial migration has already been created (`InitialCreate`).
+The complete schema migration has already been created (`CompleteSchemaInitial`).
 
 ### 4. Run the API
 

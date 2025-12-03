@@ -142,7 +142,80 @@ gh issue develop 2 --checkout
 - npm or yarn
 - VS Code recommended
 
-### 3. Create Project Structure
+### 3. Database Setup
+
+Money Matters uses PostgreSQL as its database. For local development, we use Docker Compose for easy setup.
+
+**Prerequisites:**
+- Docker and Docker Compose installed ([Get Docker](https://docs.docker.com/get-docker/))
+
+**Initial Setup:**
+
+1. **Create environment file**:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Customize database credentials** (optional):
+   Edit `.env` and change `POSTGRES_PASSWORD` if desired.
+
+3. **Start PostgreSQL**:
+   ```bash
+   ./backend/scripts/db-start.sh
+   ```
+
+   This starts a PostgreSQL 15 container with persistent storage.
+
+4. **Configure .NET connection string**:
+   ```bash
+   cd backend/MoneyMatters.Api
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Port=5432;Database=moneymatters_dev;Username=moneymatters;Password=dev_password_change_me"
+   ```
+
+   **Note**: Use the password from your `.env` file.
+
+5. **Run database migrations**:
+   ```bash
+   dotnet ef database update
+   ```
+
+6. **Verify connection**:
+   ```bash
+   dotnet run --project backend/MoneyMatters.Api
+   ```
+
+   The API should start without database connection errors.
+
+**Database Management:**
+
+- **Start database**: `./backend/scripts/db-start.sh`
+- **Stop database**: `./backend/scripts/db-stop.sh`
+- **Reset database** (deletes all data): `./backend/scripts/db-reset.sh`
+- **View logs**: `./backend/scripts/db-logs.sh`
+
+**Persistence:**
+
+Database data is stored in a Docker volume (`postgres_data`). Stopping the container does NOT delete data. To completely reset:
+
+```bash
+./backend/scripts/db-reset.sh
+```
+
+**Troubleshooting:**
+
+- **Connection refused errors**:
+  - Verify PostgreSQL is running: `docker ps | grep moneymatters-db`
+  - Check logs: `./backend/scripts/db-logs.sh`
+
+- **Port already in use**:
+  - Change `POSTGRES_PORT` in `.env` to another port (e.g., 5433)
+  - Update User Secrets connection string to match
+
+- **Migration errors**:
+  - Ensure PostgreSQL is running and healthy
+  - Verify User Secrets connection string matches `.env` credentials
+
+### 4. Create Project Structure
 
 Follow the implementation plan to create the folder structure:
 
@@ -160,7 +233,7 @@ money-matters/
 └── docs/
 ```
 
-### 4. Setup Azure Resources (when ready)
+### 5. Setup Azure Resources (when ready)
 
 Provision Azure resources as outlined in issue #5:
 - Azure Resource Group
