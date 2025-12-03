@@ -20,6 +20,7 @@ docs/                                   # Project-wide documentation (you are he
 ├── product-spec.md                     # Product requirements and design
 ├── implementation-plan.md              # Development roadmap
 ├── database-schema.md                  # Database schema design
+├── database-verification.md            # Database verification testing guide
 ├── security.md                         # Security guidelines
 ├── quick-start.md                      # Quick setup guide
 │
@@ -50,6 +51,8 @@ backend/                                # Backend-specific documentation
 - **[Implementation Plan](implementation-plan.md)** - Phase-by-phase implementation plan with all features organized into logical development phases. Track progress and understand the development roadmap.
 
 - **[Database Schema](database-schema.md)** - Complete database schema design with all entities, relationships, indexes, and constraints. Essential reference for backend development.
+
+- **[Database Verification](database-verification.md)** - Comprehensive guide to database verification testing. Includes 95+ tests (bash + xUnit) that validate schema, migrations, seed data, CRUD operations, and constraints. Run this after database setup or schema changes.
 
 ### Getting Started
 

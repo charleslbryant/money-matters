@@ -194,8 +194,8 @@ fi
 
 # Test 7: Database schema
 print_header "TEST 7: Database Schema"
-print_test "Checking if core tables exist"
-TABLES=("Users" "Accounts" "Bills" "IncomeStreams" "Goals" "Transactions" "Alerts" "Settings")
+print_test "Checking if all 10 tables exist"
+TABLES=("Users" "Accounts" "Bills" "IncomeStreams" "Goals" "Transactions" "Alerts" "Settings" "ForecastSnapshots" "GoalAccounts")
 TABLES_VALID=true
 for table in "${TABLES[@]}"; do
     TABLE_EXISTS=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM information_schema.tables WHERE table_name='${table}';" 2>/dev/null || echo "0")
@@ -207,7 +207,15 @@ for table in "${TABLES[@]}"; do
     fi
 done
 if [ "$TABLES_VALID" = true ]; then
-    print_pass "All core tables exist"
+    print_pass "All 10 tables exist"
+fi
+
+print_test "Verifying table count (should be exactly 11 including __EFMigrationsHistory)"
+TABLE_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';" 2>/dev/null || echo "0")
+if [ "$TABLE_COUNT" -eq 11 ]; then
+    print_pass "Exactly 11 tables exist (10 entities + migrations history)"
+else
+    print_fail "Expected 11 tables, found $TABLE_COUNT"
 fi
 
 # Test 8: User Secrets configuration
@@ -236,6 +244,82 @@ if docker volume ls | grep -q "money-matters_postgres_data"; then
     print_pass "Docker volume 'money-matters_postgres_data' exists"
 else
     print_fail "Docker volume 'money-matters_postgres_data' does not exist"
+fi
+
+# Test 9a: Seed Data Counts (only run if seed data exists)
+if [ "$USER_COUNT" -gt 0 ]; then
+    print_header "TEST 9a: Seed Data Validation"
+
+    print_test "Verifying exactly 1 user exists"
+    if [ "$USER_COUNT" -eq 1 ]; then
+        print_pass "Exactly 1 user exists"
+    else
+        print_fail "Expected 1 user, found $USER_COUNT"
+    fi
+
+    print_test "Verifying exactly 5 accounts exist"
+    ACCOUNT_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"Accounts\";" 2>/dev/null || echo "0")
+    if [ "$ACCOUNT_COUNT" -eq 5 ]; then
+        print_pass "Exactly 5 accounts exist"
+    else
+        print_fail "Expected 5 accounts, found $ACCOUNT_COUNT"
+    fi
+
+    print_test "Verifying exactly 6 bills exist"
+    BILL_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"Bills\";" 2>/dev/null || echo "0")
+    if [ "$BILL_COUNT" -eq 6 ]; then
+        print_pass "Exactly 6 bills exist"
+    else
+        print_fail "Expected 6 bills, found $BILL_COUNT"
+    fi
+
+    print_test "Verifying exactly 2 income streams exist"
+    INCOME_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"IncomeStreams\";" 2>/dev/null || echo "0")
+    if [ "$INCOME_COUNT" -eq 2 ]; then
+        print_pass "Exactly 2 income streams exist"
+    else
+        print_fail "Expected 2 income streams, found $INCOME_COUNT"
+    fi
+
+    print_test "Verifying exactly 3 goals exist"
+    GOAL_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"Goals\";" 2>/dev/null || echo "0")
+    if [ "$GOAL_COUNT" -eq 3 ]; then
+        print_pass "Exactly 3 goals exist"
+    else
+        print_fail "Expected 3 goals, found $GOAL_COUNT"
+    fi
+
+    print_test "Verifying exactly 3 goal-account links exist"
+    GOALACCOUNT_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"GoalAccounts\";" 2>/dev/null || echo "0")
+    if [ "$GOALACCOUNT_COUNT" -eq 3 ]; then
+        print_pass "Exactly 3 goal-account links exist"
+    else
+        print_fail "Expected 3 goal-account links, found $GOALACCOUNT_COUNT"
+    fi
+
+    print_test "Verifying at least 9 transactions exist"
+    TRANSACTION_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"Transactions\";" 2>/dev/null || echo "0")
+    if [ "$TRANSACTION_COUNT" -ge 9 ]; then
+        print_pass "At least 9 transactions exist ($TRANSACTION_COUNT found)"
+    else
+        print_fail "Expected at least 9 transactions, found $TRANSACTION_COUNT"
+    fi
+
+    print_test "Verifying exactly 5 settings exist"
+    SETTING_COUNT=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT COUNT(*) FROM \"Settings\";" 2>/dev/null || echo "0")
+    if [ "$SETTING_COUNT" -eq 5 ]; then
+        print_pass "Exactly 5 settings exist"
+    else
+        print_fail "Expected 5 settings, found $SETTING_COUNT"
+    fi
+
+    print_test "Verifying development user email"
+    DEV_EMAIL=$(docker exec moneymatters-db psql -U moneymatters -d moneymatters_dev -tAc "SELECT \"Email\" FROM \"Users\" LIMIT 1;" 2>/dev/null || echo "")
+    if [ "$DEV_EMAIL" = "dev@moneymatters.local" ]; then
+        print_pass "Development user has correct email"
+    else
+        print_fail "Development user email is '$DEV_EMAIL', expected 'dev@moneymatters.local'"
+    fi
 fi
 
 # Test 10: Security verification

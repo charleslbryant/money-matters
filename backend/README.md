@@ -76,9 +76,44 @@ This starts a PostgreSQL 15 container with persistent storage using Docker Compo
 - **Stop**: `./backend/scripts/db-stop.sh`
 - **Reset** (destroys all data): `./backend/scripts/db-reset.sh`
 - **Logs**: `./backend/scripts/db-logs.sh`
-- **Verify Setup**: `./backend/scripts/verify-db-setup.sh` (runs 26 tests to verify database setup)
+- **Verify Setup**: `./backend/scripts/verify-db-setup.sh` (runs 36+ tests to verify database setup)
+- **Run All Verification Tests**: `./backend/scripts/run-verification-tests.sh` (runs bash + xUnit tests for comprehensive validation)
 
 See [backend/scripts/README.md](scripts/README.md) for detailed documentation.
+
+#### Database Verification
+
+After setting up the database and running migrations, verify everything works correctly:
+
+```bash
+# Run comprehensive verification (recommended)
+./backend/scripts/run-verification-tests.sh
+```
+
+This runs **95+ verification tests** including:
+- ✅ Docker container health
+- ✅ Database connectivity
+- ✅ Migrations applied
+- ✅ All 10 tables created
+- ✅ Indexes and constraints
+- ✅ Seed data populated (1 user, 5 accounts, 6 bills, etc.)
+- ✅ CRUD operations functional
+- ✅ Foreign key relationships
+- ✅ Constraint enforcement
+- ✅ Security checks
+
+**Quick verification options:**
+
+```bash
+# Bash tests only (infrastructure + seed data)
+./backend/scripts/verify-db-setup.sh
+
+# xUnit tests only (schema + CRUD + constraints)
+cd backend
+dotnet test MoneyMatters.Infrastructure.Tests --filter "FullyQualifiedName~SchemaValidationTests|FullyQualifiedName~SeedDataValidationTests|FullyQualifiedName~CrudOperationTests|FullyQualifiedName~ConstraintValidationTests"
+```
+
+See [docs/database-verification.md](../docs/database-verification.md) for complete verification guide.
 
 #### Alternative: Local PostgreSQL Installation
 

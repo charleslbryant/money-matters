@@ -105,7 +105,7 @@ public static class SeedData
             Amount = 2000m,
             Frequency = BillFrequency.Monthly,
             DayOfMonth = 1,
-            NextDueDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1),
+            NextDueDate = DateTime.SpecifyKind(new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1), DateTimeKind.Utc),
             Domain = FinancialDomain.Personal,
             DefaultAccountId = personalChecking.Id,
             Priority = 1,
@@ -165,7 +165,7 @@ public static class SeedData
             Amount = 200m,
             Frequency = BillFrequency.Monthly,
             DayOfMonth = 1,
-            NextDueDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1),
+            NextDueDate = DateTime.SpecifyKind(new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1), DateTimeKind.Utc),
             Domain = FinancialDomain.Business,
             DefaultAccountId = businessChecking.Id,
             Priority = 3,
@@ -180,7 +180,7 @@ public static class SeedData
             Amount = 1500m,
             Frequency = BillFrequency.Monthly,
             DayOfMonth = 1,
-            NextDueDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1),
+            NextDueDate = DateTime.SpecifyKind(new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(1), DateTimeKind.Utc),
             Domain = FinancialDomain.Business,
             DefaultAccountId = businessChecking.Id,
             Priority = 1,
@@ -437,12 +437,12 @@ public static class SeedData
     private static DateTime GetNextDueDate(int dayOfMonth)
     {
         var now = DateTime.UtcNow;
-        var dueDate = new DateTime(now.Year, now.Month, Math.Min(dayOfMonth, DateTime.DaysInMonth(now.Year, now.Month)));
+        var dueDate = new DateTime(now.Year, now.Month, Math.Min(dayOfMonth, DateTime.DaysInMonth(now.Year, now.Month)), 0, 0, 0, DateTimeKind.Utc);
 
         if (dueDate <= now)
         {
             dueDate = dueDate.AddMonths(1);
-            dueDate = new DateTime(dueDate.Year, dueDate.Month, Math.Min(dayOfMonth, DateTime.DaysInMonth(dueDate.Year, dueDate.Month)));
+            dueDate = new DateTime(dueDate.Year, dueDate.Month, Math.Min(dayOfMonth, DateTime.DaysInMonth(dueDate.Year, dueDate.Month)), 0, 0, 0, DateTimeKind.Utc);
         }
 
         return dueDate;
@@ -455,16 +455,16 @@ public static class SeedData
 
         if (day < 15)
         {
-            return new DateTime(now.Year, now.Month, 15);
+            return new DateTime(now.Year, now.Month, 15, 0, 0, 0, DateTimeKind.Utc);
         }
         else if (day < DateTime.DaysInMonth(now.Year, now.Month))
         {
-            return new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month));
+            return new DateTime(now.Year, now.Month, DateTime.DaysInMonth(now.Year, now.Month), 0, 0, 0, DateTimeKind.Utc);
         }
         else
         {
             var nextMonth = now.AddMonths(1);
-            return new DateTime(nextMonth.Year, nextMonth.Month, 15);
+            return new DateTime(nextMonth.Year, nextMonth.Month, 15, 0, 0, 0, DateTimeKind.Utc);
         }
     }
 }
